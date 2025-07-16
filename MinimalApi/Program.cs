@@ -1,15 +1,11 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Http.HttpResults;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using MinimalApi;
 using MinimalApi.Data;
 using MinimalApi.Model;
-using MinimalApi.Validation;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -188,5 +184,17 @@ app.MapDelete("DeleteItem/{id:int}", async (AppDbContext db, int id) =>
 .Produces(400)
 .Produces(204);
 
+app.MapGet("SeachItem/", async (AppDbContext db, string? searchTerm) =>
+{
+    if (string.IsNullOrEmpty(searchTerm))
+    {
+        return Results.BadRequest();
+    }
+    var items = await db.Todo.Where(u => u.Title.Contains(searchTerm)).ToListAsync();
+    return Results.Ok(items);
+}).WithTags("Task")
+.Produces(404)
+.Produces(200)
+;
 
 app.Run();
