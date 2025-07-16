@@ -12,5 +12,6 @@ namespace MinimalApi.Data
 
         public DbSet<TodoModel> Todo => Set<TodoModel>();
         public DbSet<NotesModel> Notes => Set<NotesModel>();
+        public DbSet<UserModel> UserModels => Set<UserModel>();
     }
 }
